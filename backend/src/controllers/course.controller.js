@@ -13,7 +13,7 @@ export const createCourse =async(req , res)=>{
         const thumbnail = req.file
 
         if(!title || !description || !amount){
-            return res.status(401).json({
+            return res.status(400).json({
                 message:"Please provide all the detail"
             })
         }
@@ -47,6 +47,10 @@ export const createCourse =async(req , res)=>{
 
     } catch (error) {
         console.log(`error from create course. ${error}`)
+        return res.status(500).json({
+            message:"Error creating course",
+            error:error.message
+        })
     }
 }
 
@@ -57,7 +61,7 @@ export const getCourse = async(req, res)=>{
         
         const {search}  = req.query;
 
-        if(!search || !search.trim()===""){
+        if(!search || search.trim()===""){
             const allCourses = await Course.find()
 
             return res.status(201).json({
@@ -100,21 +104,19 @@ export const getCourse = async(req, res)=>{
         console.log(`found ,${courses.length} , courses ${search}`)
 
 
-        return res.status(201).json({
+        return res.status(200).json({
             success:true,
             courses,
             count:courses.length,
-            searchTerm:search,
-
+            searchTerm:search
         })
-
-
-    
-
-
 
     } catch (error) {
         console.log(`error from getCourse, ${error}`)
+        return res.status(500).json({
+            message:"Error fetching courses",
+            error:error.message
+        })
     }
 }
 
@@ -128,15 +130,19 @@ export const getSingleCourse=async(req,res)=>{
 
 
         if(!course){
-            return res.status(401).json({
+            return res.status(404).json({
                 message:"Course not found"
             })
         }
 
 
-        return res.status(201).json(course)
+        return res.status(200).json(course)
     } catch (error) {
         console.log(error ," from get single course")
+        return res.status(500).json({
+            message:"Error fetching course",
+            error:error.message
+        })
     }
 }
 
@@ -151,7 +157,7 @@ export const getPurchasedCourse = async(req,res)=>{
         const userId = req.user._id;
 
         if(!courseId){
-            return res.status(401).json({
+            return res.status(400).json({
                 message:"course not found"
             })
         }
@@ -167,15 +173,19 @@ export const getPurchasedCourse = async(req,res)=>{
 
 
         if(!purchasedOrder){
-            return res.status(401).json({
+            return res.status(404).json({
                 message:"Course not found"
             })
         }
 
 
-        return res.status(201).json(purchasedOrder)
+        return res.status(200).json(purchasedOrder)
     } catch (error) {
         console.log(error, "from getPurchased course")
+        return res.status(500).json({
+            message:"Error fetching purchased course",
+            error:error.message
+        })
     }
 }
 
@@ -187,13 +197,17 @@ export const getAllPurchasedCourse = async(req,res)=>{
         const user = await User.findById(userId).populate("purchasedCourse")
 
         if(!user){
-            return res.status(401).json({
+            return res.status(404).json({
                 message:"User not found"
             })
         }
 
-        return res.status(201).json(user)
+        return res.status(200).json(user)
     } catch (error) {
         console.log(error)
+        return res.status(500).json({
+            message:"Error fetching purchased courses",
+            error:error.message
+        })
     }
 }

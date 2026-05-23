@@ -43,9 +43,13 @@ export const getAnalyitcsData= async()=>{
 export const getAnalyticsDataController=async(req,res)=>{
     try {
         const data = await getAnalyitcsData()
-        return res.status(201).json(data)
+        return res.status(200).json(data)
     } catch (error) {
         console.log(error)
+        return res.status(500).json({
+            message:"Error fetching analytics",
+            error:error.message
+        })
     }
 }
 
@@ -116,7 +120,7 @@ export const getDailyAnalytcController=async(req,res)=>{
         const{startDate, endDate}= req.query
 
         if(!startDate || !endDate){
-            return res.status(401).json({
+            return res.status(400).json({
                 message:"Date not found"
             })
         }
@@ -127,8 +131,12 @@ export const getDailyAnalytcController=async(req,res)=>{
 
         const data = await dailyEnrollmentData(start, end)
 
-        return res.status(201).json(data)
+        return res.status(200).json(data)
     } catch (error) {
         console.log(error)
+        return res.status(500).json({
+            message:"Error fetching daily analytics",
+            error:error.message
+        })
     }
 }

@@ -9,7 +9,7 @@ const userRoute = express.Router()
 
 userRoute.post('/register', Register)
 userRoute.post('/login', Login)
-userRoute.post('/logout', logout)
+userRoute.post('/logout', protectRoute, logout)
 userRoute.get('/getUser',protectRoute, getUser)
 userRoute.post('/updateProfile', protectRoute, upload.single("profilePhoto"), updateProfile)
 

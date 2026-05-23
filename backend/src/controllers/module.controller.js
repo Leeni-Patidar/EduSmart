@@ -4,7 +4,7 @@ export const createModule = async(req,res)=>{
     try {
         const {courseId,  title, content}= req.body;
         if(!courseId || !title || !content){
-            return res.status(401).json({
+            return res.status(400).json({
                 message:"Please provide all the details"
             })
         }
@@ -14,7 +14,6 @@ export const createModule = async(req,res)=>{
             title,
             content
         })
-        module.save()
 
         await Course.findByIdAndUpdate(courseId,{
             $push:{modules:module._id}
@@ -24,6 +23,10 @@ export const createModule = async(req,res)=>{
         return res.status(201).json(module)
     } catch (error) {
         console.log(`error from create module, ${error}`)
+        return res.status(500).json({
+            message:"Error creating module",
+            error:error.message
+        })
     }
 }
 
@@ -32,7 +35,7 @@ export const getSingleCourseModule = async(req,res)=>{
     try {
         const moduleId = req.params.id;
         if(!moduleId){
-            return res.status(401).json({
+            return res.status(400).json({
                 message:"Please provide module id"
             })
         }
@@ -40,7 +43,7 @@ export const getSingleCourseModule = async(req,res)=>{
         const singleModule = await Modules.findById(moduleId)
 
         if(!singleModule){
-            return res.status(401).json({
+            return res.status(404).json({
                 message:"Module not found"
             })
         }
@@ -53,9 +56,13 @@ export const getSingleCourseModule = async(req,res)=>{
             })
         }
 
-        return res.status(201).json(singleModule)
+        return res.status(200).json(singleModule)
     } catch (error) {
         console.log(error ,"from get single course module")
+        return res.status(500).json({
+            message:"Error fetching module",
+            error:error.message
+        })
     }
 }
 

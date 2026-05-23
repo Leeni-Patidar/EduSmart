@@ -16,14 +16,17 @@ export const checkQuiz = async(req,res)=>{
             moduleId
         })
 
-        return res.status(201).json({
+        return res.status(200).json({
             success:true,
             hasQuiz: quiz,
             quiz: quiz|| null
-
         })
     } catch (error) {
         console.log(error , "from check quiz")
+        return res.status(500).json({
+            message:"Error checking quiz",
+            error:error.message
+        })
     }
 }
 
@@ -32,7 +35,7 @@ export const generateQuiz = async(req, res)=>{
     try {
         const {moduleId, content} = req.body;
         if(!moduleId || !content){
-            return res.status(401).json({
+            return res.status(400).json({
                 message:"Something is missing"
             })
         }
@@ -131,6 +134,10 @@ export const generateQuiz = async(req, res)=>{
         })
     } catch (error) {
         console.log(error, "error from generateQuiz")
+        return res.status(500).json({
+            message:"Error generating quiz",
+            error:error.message
+        })
     }
 }
 
@@ -140,7 +147,7 @@ export const getQuiz = async(req,res)=>{
         const quizId = req.params.id;
         
         if(!quizId){
-            return res.status(401).json({
+            return res.status(400).json({
                 message:"quiz id not found"
             })
         }
@@ -151,16 +158,20 @@ export const getQuiz = async(req,res)=>{
         }).populate("questions")
 
         if(!quiz){
-            return res.status(401).json({
+            return res.status(404).json({
                 message:"Quiz not found"
             })
         }
 
-        return res.status(201).json({
+        return res.status(200).json({
             success:true,
             quiz
         })
     } catch (error) {
         console.log(error)
+        return res.status(500).json({
+            message:"Error fetching quiz",
+            error:error.message
+        })
     }
 }

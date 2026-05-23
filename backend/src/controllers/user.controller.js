@@ -25,7 +25,7 @@ export const Register = async(req ,res)=>{
         const {fullName, email, password} = req.body;
 
         if(!fullName || !email || !password){
-            return res.status(401).json({
+            return res.status(400).json({
                 message:"Please provide all the details", 
                 success:false
             })
@@ -33,7 +33,7 @@ export const Register = async(req ,res)=>{
 
         const user = await User.findOne({email})
         if(user){
-            return res.status(401).json({
+            return res.status(400).json({
                 message:"User already exist"
             })
         }
@@ -74,8 +74,8 @@ export const Login = async(req,res)=>{
         const {email, password} = req.body;
 
         if(!email || !password){
-            return res.status(401).json({
-                messsage:"Please provide all the details"
+            return res.status(400).json({
+                message:"Please provide all the details"
             })
         }
 
@@ -120,6 +120,10 @@ export const Login = async(req,res)=>{
         
     } catch (error) {
         console.log(`error from Login backend, ${error}`)
+        return res.status(500).json({
+            message:"Error during login",
+            error:error.message
+        })
     }
 }
 
@@ -131,15 +135,19 @@ export const getUser = async(req,res)=>{
         const user = await User.findById(userId)
 
         if(!user){
-            return res.status(401).json({
+            return res.status(404).json({
                 message:"User not found"
             })
         }
 
 
-        return res.status(201).json(user)
+        return res.status(200).json(user)
     } catch (error) {
         console.log(`error from get User, ${error}`)
+        return res.status(500).json({
+            message:"Error fetching user",
+            error:error.message
+        })
     }
 }
 
