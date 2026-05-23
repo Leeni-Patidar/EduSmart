@@ -55,6 +55,44 @@ const Quiz = () => {
     )
   }
 
+  if (!data?.quiz) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="max-w-xl w-full bg-white border border-slate-200 rounded-3xl shadow-sm p-10 text-center">
+          <h1 className="text-3xl font-bold text-slate-900 mb-4">Quiz not found</h1>
+          <p className="text-slate-600 mb-6">
+            This quiz does not exist or has not been generated yet. Please return to your course and create the quiz first.
+          </p>
+          <button
+            onClick={() => navigate(-1)}
+            className="px-6 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all"
+          >
+            Back to course
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (totalQuestions === 0) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="max-w-xl w-full bg-white border border-slate-200 rounded-3xl shadow-sm p-10 text-center">
+          <h1 className="text-3xl font-bold text-slate-900 mb-4">No quiz questions available</h1>
+          <p className="text-slate-600 mb-6">
+            The quiz has been created, but no questions were generated. Please try creating the quiz again from your course page.
+          </p>
+          <button
+            onClick={() => navigate(-1)}
+            className="px-6 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all"
+          >
+            Back to course
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-4">
       <div className="max-w-3xl mx-auto">

@@ -25,15 +25,19 @@ const SinglePurchasedCourse = () => {
     navigate(`/quiz/${quizId}`)
   }
 
-  const { mutate: createQuiz } = useCreateQuiz()
+  const { mutate: createQuiz, isLoading: isCreatingQuiz } = useCreateQuiz()
   const createQuizHandler = (moduleData) => {
     createQuiz(
       {
         moduleId: moduleData._id,
-        content: moduleData.title
+        content: moduleData.content || moduleData.title
       },
       {
-        onSuccess: () => toast.success('Quiz created successfully!')
+        onSuccess: (data) => {
+          if (data?.quizId) {
+            navigate(`/quiz/${data.quizId}`)
+          }
+        }
       }
     )
   }
@@ -101,10 +105,11 @@ const SinglePurchasedCourse = () => {
                       {!item.quiz ? (
                         <button
                           onClick={() => createQuizHandler(item)}
-                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-lg transition-all flex items-center gap-2"
+                          disabled={isCreatingQuiz}
+                          className={`px-4 py-2 text-white text-sm font-semibold rounded-lg transition-all flex items-center gap-2 ${isCreatingQuiz ? 'bg-slate-300 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700'}`}
                         >
                           <FileQuestion className="w-4 h-4" />
-                          Create Quiz
+                          {isCreatingQuiz ? 'Creating Quiz...' : 'Create Quiz'}
                         </button>
                       ) : (
                         <button

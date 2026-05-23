@@ -130,7 +130,8 @@ export const generateQuiz = async(req, res)=>{
         )
 
         return res.status(201).json({
-            message:"Quiz generated"
+            message:"Quiz generated",
+            quizId:newQuiz._id
         })
     } catch (error) {
         console.log(error, "error from generateQuiz")
